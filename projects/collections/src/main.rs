@@ -90,4 +90,45 @@ fn main() {
     }
 
     println!("{:?}", map);
+
+    let v = vec![1, 2, 3, 4, 5, 2];
+    println!("mean: {}", mean(&v));
+    println!("median: {}", median(&v));
+    println!("mode: {}", mode(&v));
+}
+
+fn mean(v: &[isize]) -> f64 {
+    let mut sum = 0.0;
+    for num in v {
+        sum += *num as f64;
+    }
+    sum / v.len() as f64
+}
+
+fn median(v: &[isize]) -> f64 {
+    let mut new_v = v.to_owned();
+    new_v.sort_unstable();
+    println!("{:?}", new_v);
+    let length = v.len();
+    if length % 2 == 0 {
+        (new_v[length / 2 - 1] + new_v[length / 2]) as f64 / 2.0
+    } else {
+        new_v[(length + 1) / 2] as f64
+    }
+}
+
+fn mode(v: &[isize]) -> isize {
+    let mut counts: HashMap<isize, usize> = HashMap::new();
+    for num in v {
+        let counter = counts.entry(*num).or_insert(0);
+        *counter += 1;
+    }
+
+    let mut max: (isize, usize) = (v[0], 0);
+    for (num, count) in counts.iter() {
+        if *count > max.1 {
+            max = (*num, *count);
+        }
+    }
+    max.0
 }
